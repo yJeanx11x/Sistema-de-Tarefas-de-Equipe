@@ -1,4 +1,5 @@
 require('dotenv').config()
+const { id } = require('zod/locales')
 const db = require('../module/User')
 const validacao = require('../schemas/userSchema')
 const bcrypt = require('bcrypt')
@@ -35,10 +36,10 @@ async function login(req, res, next) {
     try {
         const secret = process.env.SECRET
         const token = jwt.sign({
-            id: usuario.id
-        }, secret)
+            id: usuario.id,
+        }, secret, { expiresIn: '1h' })
 
-        return res.status(200).json({ message: "Sucesso", token })
+        return res.status(200).json({ message: "Sucesso", id: usuario.id, token })
     } catch (error) {
         next()
     }
